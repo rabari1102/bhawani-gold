@@ -1,26 +1,117 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-maroon-dark: #1a1a1a;
+  --color-maroon: #000000;
+  --color-maroon-light: #333333;
+  --color-maroon-pale: #f9f9f9;
+  --color-gold: #c5a059;
+  --color-gold-light: #e8d5b7;
+  --color-bg-light: #ffffff;
+  --color-text-dark: #111111;
+  --color-text-gray: #666666;
+  --color-border-light: #eeeeee;
+
+  --font-heading: 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  body {
+    background-color: var(--color-bg-light);
+    color: var(--color-text-dark);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    color: var(--color-text-dark);
+    letter-spacing: -0.02em;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full;
+  }
+
+  .btn-primary {
+    @apply bg-black text-white px-8 py-3 rounded hover:bg-gray-800 transition-colors inline-block font-medium text-sm tracking-wide;
+  }
+
+  .btn-outline {
+    @apply bg-transparent text-black px-8 py-3 rounded border border-black hover:bg-black hover:text-white transition-colors inline-block font-medium text-sm tracking-wide;
+  }
+
+  .btn-gold {
+    @apply bg-[#c5a059] text-white px-8 py-3 rounded hover:bg-[#b08d4b] transition-colors inline-block font-medium text-sm tracking-wide;
+  }
+
+  .section-padding {
+    @apply py-16 md:py-24;
+  }
+
+  .img-placeholder {
+    @apply bg-gray-100 flex items-center justify-center text-gray-400 relative overflow-hidden;
+  }
 }
+
+/* Animations */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg-light);
+}
+::-webkit-scrollbar-thumb {
+  background: #dddddd;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #bbbbbb;
+}
+
+/* Modal Overlay (Glassmorphism) */
+.modal-overlay {
+  @apply fixed inset-0 z-50 flex items-center justify-center p-4;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal-content {
+  @apply bg-white/95 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto;
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes pingShort {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(3); opacity: 0; }
+}
+
+.animate-ping-short {
+  animation: pingShort 0.6s cubic-bezier(0, 0, 0.2, 1) forwards;
+}
+

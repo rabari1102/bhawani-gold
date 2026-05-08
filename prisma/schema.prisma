@@ -1,0 +1,149 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Category {
+  id           String     @id @default(cuid())
+  name         String
+  slug         String     @unique
+  description  String?
+  image        String?
+  displayOrder Int        @default(0)
+  parentId     String?
+  parent       Category?  @relation("SubCategories", fields: [parentId], references: [id])
+  children     Category[] @relation("SubCategories")
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  products     Product[]
+}
+
+model Product {
+  id                 String   @id @default(cuid())
+  sku                String   @unique
+  name               String
+  slug               String   @unique
+  categoryId         String
+  category           Category @relation(fields: [categoryId], references: [id])
+  description        String?
+  weight             Float?
+  metalType          String   @default("GOLD_22K")
+  purity             String?  @default("22K 916")
+  availabilityStatus String   @default("In Stock")
+  isHallmarked       Boolean  @default(true)
+  price              Float?
+  isTopTrending      Boolean  @default(false)
+  isNewArrival       Boolean  @default(false)
+  isSpecialSelection Boolean  @default(false)
+  isVisible          Boolean  @default(true)
+  images             String   @default("[]")
+  primaryImage       String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model MetalRate {
+  id          String   @id @default(cuid())
+  type        String
+  purity      String
+  ratePerGram Float
+  lastUpdated DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Testimonial {
+  id           String   @id @default(cuid())
+  customerName String
+  location     String
+  reviewText   String
+  displayOrder Int      @default(0)
+  isVisible    Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Service {
+  id                  String   @id @default(cuid())
+  title               String
+  shortDescription    String
+  detailedDescription String?
+  icon                String?
+  image               String?
+  displayOrder        Int      @default(0)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  excerpt     String
+  content     String
+  coverImage  String?
+  publishDate DateTime @default(now())
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model StoreSettings {
+  id              String  @id @default("default")
+  storeName       String  @default("Bhawani Jewellers")
+  tagline         String?
+  address         String?
+  phone           String?
+  email           String?
+  openingHours    String?
+  heroHeading     String?
+  heroSubheading  String?
+  heroImage       String?
+  heroCTA1Text    String?
+  heroCTA1Link    String?
+  heroCTA2Text    String?
+  heroCTA2Link    String?
+  aboutHeading    String?
+  aboutSubheading String?
+  aboutContent    String?
+  aboutImage      String?
+  socialInstagram String?
+  socialFacebook  String?
+  socialYoutube   String?
+  footerText      String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model ContactEnquiry {
+  id           String   @id @default(cuid())
+  name         String
+  email        String
+  phone        String?
+  message      String
+  interestedIn String?
+  isRead       Boolean  @default(false)
+  createdAt    DateTime @default(now())
+}
