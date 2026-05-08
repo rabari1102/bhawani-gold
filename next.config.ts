@@ -1,8 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
+  serverExternalPackages: ['@prisma/adapter-libsql', '@libsql/client', 'libsql', 'bcryptjs', 'jsonwebtoken'],
+  turbopack: {
+    root: __dirname,
   },
   typescript: {
     ignoreBuildErrors: false,

@@ -1,7 +1,12 @@
-import jwt from 'jsonwebtoken';
+import type jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'bhawani-jewellers-secret-key-change-in-production';
+
+// Lazy-load jsonwebtoken to avoid crypto 'bind' errors during Next.js build
+function getJwt(): typeof jwt {
+  return require('jsonwebtoken') as typeof jwt;
+}
 
 export interface JWTPayload {
   adminId?: string;
@@ -10,12 +15,12 @@ export interface JWTPayload {
 }
 
 export function signToken(payload: JWTPayload): string {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' });
+  return getJwt().sign(payload, JWT_SECRET, { expiresIn: '7d' });
 }
 
 export function verifyToken(token: string): JWTPayload | null {
   try {
-    return jwt.verify(token, JWT_SECRET) as JWTPayload;
+    return getJwt().verify(token, JWT_SECRET) as JWTPayload;
   } catch {
     return null;
   }
