@@ -1,15 +1,14 @@
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
 model Admin {
-  id           String   @id @default(cuid())
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
   email        String   @unique
   passwordHash String
   name         String
@@ -18,7 +17,7 @@ model Admin {
 }
 
 model User {
-  id           String   @id @default(cuid())
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
   email        String   @unique
   passwordHash String
   name         String
@@ -27,14 +26,14 @@ model User {
 }
 
 model Category {
-  id           String     @id @default(cuid())
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
   name         String
   slug         String     @unique
   description  String?
   image        String?
   displayOrder Int        @default(0)
-  parentId     String?
-  parent       Category?  @relation("SubCategories", fields: [parentId], references: [id])
+  parentId     String?    @db.ObjectId
+  parent       Category?  @relation("SubCategories", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   children     Category[] @relation("SubCategories")
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
@@ -42,11 +41,11 @@ model Category {
 }
 
 model Product {
-  id                 String   @id @default(cuid())
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
   sku                String   @unique
   name               String
   slug               String   @unique
-  categoryId         String
+  categoryId         String   @db.ObjectId
   category           Category @relation(fields: [categoryId], references: [id])
   description        String?
   weight             Float?
@@ -66,7 +65,7 @@ model Product {
 }
 
 model MetalRate {
-  id          String   @id @default(cuid())
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
   type        String
   purity      String
   ratePerGram Float
@@ -76,7 +75,7 @@ model MetalRate {
 }
 
 model Testimonial {
-  id           String   @id @default(cuid())
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
   customerName String
   location     String
   reviewText   String
@@ -87,7 +86,7 @@ model Testimonial {
 }
 
 model Service {
-  id                  String   @id @default(cuid())
+  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
   title               String
   shortDescription    String
   detailedDescription String?
@@ -99,7 +98,7 @@ model Service {
 }
 
 model BlogPost {
-  id          String   @id @default(cuid())
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
   title       String
   slug        String   @unique
   excerpt     String
@@ -112,8 +111,8 @@ model BlogPost {
 }
 
 model StoreSettings {
-  id              String  @id @default("default")
-  storeName       String  @default("Bhawani Jewellers")
+  id              String   @id @map("_id")
+  storeName       String   @default("Bhawani Jewellers")
   tagline         String?
   address         String?
   phone           String?
@@ -139,7 +138,7 @@ model StoreSettings {
 }
 
 model ContactEnquiry {
-  id           String   @id @default(cuid())
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
   name         String
   email        String
   phone        String?
